@@ -11,6 +11,8 @@ export default class Search extends React.Component {
     constructor(props) {
         super(props);
 
+        this.page
+
         this.state = {
             films: [],
             isLoading: false,
@@ -42,16 +44,15 @@ export default class Search extends React.Component {
     }
 
     handleOnChangeRecherche(text) {
-        //force le changement du textRecherche
-        this.state.textRecherche = text;
-        this.forceUpdate();
-        this.loadFilmPossible();
+        this.setState({
+            textRecherche: text,
+        }, () => this.loadFilmPossible());
     }
 
     filmPossibleClick(title) {
-        this.state.textRecherche = title;
-        this.forceUpdate();
-        this.loadFilm();
+        this.setState({
+            textRecherche: title,
+        }, () => this.loadFilm());
     }
 
     displayLoading(){
