@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f9f5',
     },
     text: {
-        fontSizez: 15,
+        fontSize: 15,
     }
 });

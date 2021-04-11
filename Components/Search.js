@@ -11,7 +11,9 @@ export default class Search extends React.Component {
     constructor(props) {
         super(props);
 
-        this.page
+        this.page = 0;
+        this.totalPages = 0;
+        this.currentTextRecherche = "";
 
         this.state = {
             films: [],
@@ -21,6 +23,7 @@ export default class Search extends React.Component {
         };
 
         this.loadFilm = this.loadFilm.bind(this);
+        this.loadFilmScroll = this.loadFilmScroll.bind(this);
         this.filmPossibleClick = this.filmPossibleClick.bind(this);
     }
 
@@ -28,8 +31,25 @@ export default class Search extends React.Component {
         this.setState({isLoading: true,})
         getFilmsFromApiWithSearchedText(this.state.textRecherche)
         .then((data) => {
+            this.page = data.page;
+            this.totalPages = data.total_pages;
+            this.currentTextRecherche = this.state.textRecherche;
             this.setState({
                 films: data.results,
+                isLoading: false,
+                filmsPossible: [],
+            })
+        });
+    }
+
+    loadFilmScroll() {
+        this.setState({isLoading: true})
+        getFilmsFromApiWithSearchedText(this.currentTextRecherche, this.page + 1)
+        .then((data) => {
+            this.page = data.page;
+            this.totalPages = data.total_pages;
+            this.setState({
+                films: [ ...this.state.films, ...data.results ],
                 isLoading: false,
                 filmsPossible: [],
             })
@@ -87,12 +107,19 @@ export default class Search extends React.Component {
                     <FilmMoteurItem title={item.title} callbackOnClick={this.filmPossibleClick}/>
                 }/>
                 <FlatList style={styles.listFilm}
+
                     data={this.state.films}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={
                         ({item}) => 
-                    <FilmItem item={item}></FilmItem>
-                }/>
+                            <FilmItem item={item}></FilmItem>
+                    }
+                    onEndReachedThreshold={0.5}
+                    onEndReached={() => {
+                        if (this.page < this.totalPages) { 
+                            this.loadFilmScroll();
+                        }
+                    }}/>
                 {this.displayLoading()}
             </View>
         );
