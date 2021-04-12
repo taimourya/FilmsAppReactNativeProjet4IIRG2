@@ -25,6 +25,7 @@ export default class Search extends React.Component {
         this.loadFilm = this.loadFilm.bind(this);
         this.loadFilmScroll = this.loadFilmScroll.bind(this);
         this.filmPossibleClick = this.filmPossibleClick.bind(this);
+        this.navigateToFilmDetails = this.navigateToFilmDetails.bind(this);
     }
 
     loadFilm() {
@@ -43,6 +44,7 @@ export default class Search extends React.Component {
     }
 
     loadFilmScroll() {
+        /*
         this.setState({isLoading: true})
         getFilmsFromApiWithSearchedText(this.currentTextRecherche, this.page + 1)
         .then((data) => {
@@ -54,6 +56,7 @@ export default class Search extends React.Component {
                 filmsPossible: [],
             })
         });
+        */
     }
 
     loadFilmPossible() {
@@ -86,6 +89,11 @@ export default class Search extends React.Component {
         }
     }
 
+    navigateToFilmDetails(idFilm) {
+        console.log("clicked " + idFilm);
+        this.props.navigation.navigate("FilmDetails", {idFilm: idFilm});
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -112,7 +120,7 @@ export default class Search extends React.Component {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={
                         ({item}) => 
-                            <FilmItem item={item}></FilmItem>
+                            <FilmItem item={item} callbackNavigate={this.navigateToFilmDetails}></FilmItem>
                     }
                     onEndReachedThreshold={0.5}
                     onEndReached={() => {
@@ -151,5 +159,5 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'
-      },
+    },
 });

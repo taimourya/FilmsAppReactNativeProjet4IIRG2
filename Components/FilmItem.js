@@ -1,14 +1,19 @@
 import React from 'react';
-import { StyleSheet, Button, TextInput, View, FlatList, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { getImageFromApi } from '../API/tmdbApi';
 
 
 export default class FilmItem extends React.Component {
 
+    handleClickFilm(){
+        this.props.callbackNavigate(this.props.item.id);
+    }
 
     render() {
         return (
-            <View style={styles.MainView}>
+            <TouchableOpacity 
+                    style={styles.MainView}
+                    onPress={() => this.handleClickFilm()}>
                 <View style={styles.left}>
                     <Image
                         style={styles.image}
@@ -17,7 +22,9 @@ export default class FilmItem extends React.Component {
                 <View style={styles.right}>
                     <View style={styles.header}>
                         <View style={styles.headerLeft}>
-                            <Text style={styles.titreFilm}>{this.props.item.title}</Text>
+                            <Text style={styles.titreFilm}>
+                                {this.props.item.title}
+                            </Text>
                         </View>
                         <View style={styles.headerRight}>
                             <Text style={styles.noteFilm}>{this.props.item.vote_average}</Text>
@@ -30,7 +37,7 @@ export default class FilmItem extends React.Component {
                         <Text style={styles.dateSortie}>Sotie le {this.props.item.release_date}</Text>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }

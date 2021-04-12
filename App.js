@@ -1,20 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import FilmItem from './Components/FilmItem';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Search from './Components/Search';
+import FilmDetails from './Components/FilmDetails';
+
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <Search/>
+    <NavigationContainer>
+        <Stack.Navigator initialRouteName="Search">
+          <Stack.Screen name="Search" component={Search} />        
+          <Stack.Screen name="FilmDetails" component={FilmDetails} />
+        </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
