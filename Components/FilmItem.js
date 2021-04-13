@@ -9,6 +9,19 @@ export default class FilmItem extends React.Component {
         this.props.callbackNavigate(this.props.item.id);
     }
 
+    displayFavoriteIcon() {
+        if(this.props.isFilmFavorite)
+        {
+            var sourceImage = require('../assets/images/ic_favorite.png')
+            return (
+                <Image
+                    style={styles.favorite_image}
+                    source={sourceImage}
+                  />
+            );
+        }
+    }
+
     render() {
         return (
             <TouchableOpacity 
@@ -23,6 +36,7 @@ export default class FilmItem extends React.Component {
                     <View style={styles.header}>
                         <View style={styles.headerLeft}>
                             <Text style={styles.titreFilm}>
+                                {this.displayFavoriteIcon()}
                                 {this.props.item.title}
                             </Text>
                         </View>
@@ -96,4 +110,8 @@ const styles = StyleSheet.create({
     dateSortie: {
         fontSize: 10,
     },
+    favorite_image: {
+        width: 20,
+        height: 20
+    }
 });

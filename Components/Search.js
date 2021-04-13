@@ -3,9 +3,10 @@ import { StyleSheet, Button, TextInput, View, FlatList, Text, ActivityIndicator 
 import { getFilmsFromApiWithSearchedText } from '../API/tmdbApi';
 import FilmItem from './FilmItem';
 import FilmMoteurItem from './FilmMoteurItem';
+import { connect } from 'react-redux';
 
 
-export default class Search extends React.Component {
+class Search extends React.Component {
 
 
     constructor(props) {
@@ -90,7 +91,6 @@ export default class Search extends React.Component {
     }
 
     navigateToFilmDetails(idFilm) {
-        console.log("clicked " + idFilm);
         this.props.navigation.navigate("FilmDetails", {idFilm: idFilm});
     }
 
@@ -117,10 +117,14 @@ export default class Search extends React.Component {
                 <FlatList style={styles.listFilm}
 
                     data={this.state.films}
+                    extraData={this.props.favoritesFilm}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={
                         ({item}) => 
-                            <FilmItem item={item} callbackNavigate={this.navigateToFilmDetails}></FilmItem>
+                            <FilmItem 
+                                isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
+                                item={item} 
+                                callbackNavigate={this.navigateToFilmDetails}/>
                     }
                     onEndReachedThreshold={0.5}
                     onEndReached={() => {
@@ -161,3 +165,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 });
+
+
+const mapStateToProps = (state) => {
+    return {
+        favoritesFilm: state.favoritesFilm
+    }
+}
+
+
+export default connect(mapStateToProps)(Search);

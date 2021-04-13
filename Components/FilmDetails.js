@@ -1,9 +1,12 @@
 import React from 'react';
-import { StyleSheet, Button, TextInput, View, FlatList, Text, Image, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { getImageFromApi, getFilmDetailFromApi } from '../API/tmdbApi';
+import { connect } from 'react-redux';
 
 
-export default class FilmDetails extends React.Component {
+
+
+class FilmDetails extends React.Component {
 
     constructor(props) {
         super(props);
@@ -24,6 +27,31 @@ export default class FilmDetails extends React.Component {
         })
     }
 
+    componentDidUpdate() {
+        console.log("componentDidUpdate : ")
+        console.log(this.props.favoritesFilm)
+      }
+
+    toggleFavorite() {
+        console.log("click");
+        const action = { type: "TOGGLE_FAVORITE", value: this.state.film };
+        this.props.dispatch(action);
+    }
+
+    displayFavoriteImage() {
+        var sourceImage = require('../assets/images/ic_favorite_border.png')
+        if (this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1) {
+          
+          sourceImage = require('../assets/images/ic_favorite.png')
+        }
+        return (
+          <Image
+            style={styles.favorite_image}
+            source={sourceImage}
+          />
+        )
+    }
+
     displayFilmDetails() {
         const film = this.state.film;
         if(film != undefined) {
@@ -34,6 +62,11 @@ export default class FilmDetails extends React.Component {
                   source={{uri: getImageFromApi(film.backdrop_path)}}
                 />
                 <Text style={styles.title_text}>{film.title}</Text>
+                <TouchableOpacity
+                    style={styles.favorite_container}
+                    onPress={() => this.toggleFavorite()}>
+                    {this.displayFavoriteImage()}
+                </TouchableOpacity>
                 <Text style={styles.description_text}>{film.overview}</Text>
                 <Text style={styles.default_text}>Sorti le {film.release_date}</Text>
                 <Text style={styles.default_text}>Note : {film.vote_average} / 10</Text>
@@ -113,5 +146,21 @@ const styles = StyleSheet.create({
       marginLeft: 5,
       marginRight: 5,
       marginTop: 5,
+    },
+    favorite_container: {
+        alignItems: 'center',
+    },
+    favorite_image: {
+        width: 40,
+        height: 40
     }
 });
+
+const mapStateToProps = (state) => {
+    return {
+        favoritesFilm: state.favoritesFilm
+    }
+}
+
+
+export default connect(mapStateToProps)(FilmDetails);
