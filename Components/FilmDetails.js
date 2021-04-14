@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 
 
-
 class FilmDetails extends React.Component {
 
     constructor(props) {
@@ -24,16 +23,13 @@ class FilmDetails extends React.Component {
                 isLoading: false,
                 film: data,
             })
-        })
+        });
     }
 
     componentDidUpdate() {
-        console.log("componentDidUpdate : ")
-        console.log(this.props.favoritesFilm)
-      }
+    } 
 
     toggleFavorite() {
-        console.log("click");
         const action = { type: "TOGGLE_FAVORITE", value: this.state.film };
         this.props.dispatch(action);
     }
@@ -52,34 +48,47 @@ class FilmDetails extends React.Component {
         )
     }
 
+    navigateToFilmVideo() {
+        this.props.navigation.navigate("FilmTrailer", {idFilm: this.state.film.id});
+    }
+
     displayFilmDetails() {
         const film = this.state.film;
         if(film != undefined) {
             return (
                 <ScrollView style={styles.scrollView}>
-                <Image
-                  style={styles.image}
-                  source={{uri: getImageFromApi(film.backdrop_path)}}
-                />
-                <Text style={styles.title_text}>{film.title}</Text>
-                <TouchableOpacity
-                    style={styles.favorite_container}
-                    onPress={() => this.toggleFavorite()}>
-                    {this.displayFavoriteImage()}
-                </TouchableOpacity>
-                <Text style={styles.description_text}>{film.overview}</Text>
-                <Text style={styles.default_text}>Sorti le {film.release_date}</Text>
-                <Text style={styles.default_text}>Note : {film.vote_average} / 10</Text>
-                <Text style={styles.default_text}>Nombre de votes : {film.vote_count}</Text>
-                <Text style={styles.default_text}>Budget : {film.budget}</Text>
-                <Text style={styles.default_text}>Genre(s) : {film.genres.map(function(genre){
-                    return genre.name;
-                  }).join(" / ")}
-                </Text>
-                <Text style={styles.default_text}>Companie(s) : {film.production_companies.map(function(company){
-                    return company.name;
-                  }).join(" / ")}
-                </Text>
+
+                    <Image
+                    style={styles.image}
+                    source={{uri: getImageFromApi(film.backdrop_path)}}
+                    />
+                    <TouchableOpacity
+                        style={styles.play_container}
+                        onPress={() => this.navigateToFilmVideo()}>
+                        <Image
+                            style={styles.play_image}
+                            source={require('../assets/images/play-button.png')}
+                        />
+                    </TouchableOpacity>
+                    <Text style={styles.title_text}>{film.title}</Text>
+                    <TouchableOpacity
+                        style={styles.favorite_container}
+                        onPress={() => this.toggleFavorite()}>
+                        {this.displayFavoriteImage()}
+                    </TouchableOpacity>
+                    <Text style={styles.description_text}>{film.overview}</Text>
+                    <Text style={styles.default_text}>Sorti le {film.release_date}</Text>
+                    <Text style={styles.default_text}>Note : {film.vote_average} / 10</Text>
+                    <Text style={styles.default_text}>Nombre de votes : {film.vote_count}</Text>
+                    <Text style={styles.default_text}>Budget : {film.budget}</Text>
+                    <Text style={styles.default_text}>Genre(s) : {film.genres.map(function(genre){
+                        return genre.name;
+                    }).join(" / ")}
+                    </Text>
+                    <Text style={styles.default_text}>Companie(s) : {film.production_companies.map(function(company){
+                        return company.name;
+                    }).join(" / ")}
+                    </Text>
                 </ScrollView>
             );
         }
@@ -98,7 +107,7 @@ class FilmDetails extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={{flex: 1}}>
                 {this.displayFilmDetails()}
                 {this.displayLoading()}
             </View>
@@ -153,7 +162,14 @@ const styles = StyleSheet.create({
     favorite_image: {
         width: 40,
         height: 40
-    }
+    },
+    play_container: {
+        alignItems: 'center',
+    },
+    play_image: {
+        width: 40,
+        height: 40
+    },
 });
 
 const mapStateToProps = (state) => {

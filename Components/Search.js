@@ -61,10 +61,12 @@ class Search extends React.Component {
     }
 
     loadFilmPossible() {
+        /*
         getFilmsFromApiWithSearchedText(this.state.textRecherche)
         .then((data) => this.setState({
             filmsPossible: data.results,
         }));
+        */
     }
 
     handleOnChangeRecherche(text) {
