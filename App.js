@@ -24,7 +24,15 @@ function SearchStackNavigation() {
     </Stack.Navigator>
   );
 }
-
+function FavoriteStackNavigation() {
+  return (
+    <Stack.Navigator initialRouteName="Favorites">
+      <Stack.Screen name="Favorites" component={Favorites} />        
+      <Stack.Screen name="FilmDetails" component={FilmDetails} />
+      <Stack.Screen name="FilmTrailer" component={FilmTrailer} />
+    </Stack.Navigator>
+  );
+}
 
 
 const Tab = createBottomTabNavigator();
@@ -44,7 +52,6 @@ export default function App() {
                       iconName = 'heart-outline';
                     }
         
-                    // You can return any component that you like here!
                     return <Ionicons name={iconName} size={size} color={color} />;
                   },
               })}
@@ -56,7 +63,7 @@ export default function App() {
               }}            
             >
               <Tab.Screen name="Search" component={SearchStackNavigation}/>
-              <Tab.Screen name="Favorites" component={Favorites} />
+              <Tab.Screen name="Favorites" component={FavoriteStackNavigation} />
             </Tab.Navigator>
         </NavigationContainer>   
     </Provider>

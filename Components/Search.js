@@ -1,12 +1,11 @@
 import React from 'react';
 import { StyleSheet, Button, TextInput, View, FlatList, Text, ActivityIndicator } from 'react-native';
 import { getFilmsFromApiWithSearchedText } from '../API/tmdbApi';
-import FilmItem from './FilmItem';
+import FilmList from './FilmList';
 import FilmMoteurItem from './FilmMoteurItem';
-import { connect } from 'react-redux';
 
 
-class Search extends React.Component {
+export default class Search extends React.Component {
 
 
     constructor(props) {
@@ -116,24 +115,13 @@ class Search extends React.Component {
                         ({item}) => 
                     <FilmMoteurItem title={item.title} callbackOnClick={this.filmPossibleClick}/>
                 }/>
-                <FlatList style={styles.listFilm}
-
-                    data={this.state.films}
-                    extraData={this.props.favoritesFilm}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={
-                        ({item}) => 
-                            <FilmItem 
-                                isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
-                                item={item} 
-                                callbackNavigate={this.navigateToFilmDetails}/>
-                    }
-                    onEndReachedThreshold={0.5}
-                    onEndReached={() => {
-                        if (this.page < this.totalPages) { 
-                            this.loadFilmScroll();
-                        }
-                    }}/>
+                <FilmList 
+                    films={this.state.films}
+                    callbackNavigate={this.navigateToFilmDetails}
+                    page={this.page}
+                    totalPages={this.totalPages}
+                    loadFilmScroll={this.loadFilmScroll}
+                />
                 {this.displayLoading()}
             </View>
         );
@@ -168,12 +156,3 @@ const styles = StyleSheet.create({
     },
 });
 
-
-const mapStateToProps = (state) => {
-    return {
-        favoritesFilm: state.favoritesFilm
-    }
-}
-
-
-export default connect(mapStateToProps)(Search);
