@@ -11,6 +11,7 @@ import FilmTrailer from './Components/FilmTrailer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Favorites from './Components/Favorites';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 

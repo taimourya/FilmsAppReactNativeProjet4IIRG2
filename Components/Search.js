@@ -80,7 +80,7 @@ export default class Search extends React.Component {
         }, () => this.loadFilm());
     }
 
-    displayLoading(){
+    displayLoading() {
         if(this.state.isLoading)
         {
             return (
