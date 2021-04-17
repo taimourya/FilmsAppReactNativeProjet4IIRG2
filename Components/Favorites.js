@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import FilmList from './FilmList';
 import { connect } from 'react-redux';
+import Avatar from './Avatar';
 
 
 
@@ -19,6 +20,7 @@ class Favorites extends React.Component {
     render() {
         return (
             <View style={{flex: 1}}>
+                <Avatar/>
                 <FilmList
                     films={this.props.favoritesFilm}
                     callbackNavigate={this.navigateToFilmDetails}

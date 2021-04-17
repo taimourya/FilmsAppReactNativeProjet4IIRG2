@@ -1,4 +1,3 @@
-
 const API_TOKEN = "23709588f70cb1124fa61ee62e8a597a";
 const API_URL = "https://api.themoviedb.org/3/movie/";
 
