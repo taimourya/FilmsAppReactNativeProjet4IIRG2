@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Button, TextInput, View, FlatList, Text, ActivityIndicator } from 'react-native';
-import { getFilmsFromApiWithSearchedText } from '../API/tmdbApi';
+import { getFilmsFromApiWithSearchedText, getPopularFilmsFromApi } from '../API/tmdbApi';
 import FilmList from './FilmList';
 import FilmMoteurItem from './FilmMoteurItem';
 
@@ -26,6 +26,26 @@ export default class Search extends React.Component {
         this.loadFilmScroll = this.loadFilmScroll.bind(this);
         this.filmPossibleClick = this.filmPossibleClick.bind(this);
         this.navigateToFilmDetails = this.navigateToFilmDetails.bind(this);
+        this.loadPopularFilm = this.loadPopularFilm.bind(this);
+    }
+
+    componentDidMount() {
+        this.loadPopularFilm();
+    }
+
+
+    loadPopularFilm() {
+        this.setState({isLoading: true,})
+        getPopularFilmsFromApi()
+        .then((data) => {
+            this.page = data.page;
+            this.totalPages = data.total_pages;
+            this.setState({
+                films: data.results,
+                isLoading: false,
+                filmsPossible: [],
+            })
+        });
     }
 
     loadFilm() {
@@ -42,6 +62,8 @@ export default class Search extends React.Component {
             })
         });
     }
+
+    
 
     loadFilmScroll() {
         /*
@@ -98,6 +120,18 @@ export default class Search extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                    <Button 
+                        style={{flex: 1}}
+                        title="Popular"
+                        disabled={this.state.isLoading}
+                        onPress={this.loadPopularFilm}/>
+                    <Button 
+                        style={{flex: 1}}
+                        title="Filter"
+                        disabled={this.state.isLoading}
+                        onPress={this.loadFilm}/>
+                </View>
                 <TextInput 
                     style={styles.inputRecherche}    
                     placeholder="Entrez le titre d'un film"

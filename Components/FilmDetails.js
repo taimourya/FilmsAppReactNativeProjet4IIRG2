@@ -1,7 +1,8 @@
 import React from 'react';
 import { Platform , Share, StyleSheet, View, Text, Image, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
-import { getImageFromApi, getFilmDetailFromApi } from '../API/tmdbApi';
+import { getImageFromApi, getFilmDetailFromApi, getSimilarFilmFromApi } from '../API/tmdbApi';
 import { connect } from 'react-redux';
+import FilmList from './FilmList';
 
 
 
@@ -29,11 +30,13 @@ class FilmDetails extends React.Component {
         super(props);
 
         this.state = {
+            similarFilms: [],
             film: undefined,
             isLoading: true,
         };
 
         this.shareFilm = this.shareFilm.bind(this);
+        this.navigateToFilmDetails = this.navigateToFilmDetails.bind(this);
     }
 
     _updateNavigationParams() {
@@ -55,6 +58,13 @@ class FilmDetails extends React.Component {
             this.setState({
                 isLoading: false,
                 film: data,
+            })
+        });
+        getSimilarFilmFromApi(this.props.route.params.idFilm)
+        .then(data => {
+            this.setState({
+                isLoading: false,
+                similarFilms: data.results
             })
         });
     }
@@ -99,6 +109,9 @@ class FilmDetails extends React.Component {
     navigateToFilmVideo() {
         this.props.navigation.navigate("FilmTrailer", {idFilm: this.state.film.id});
     }
+    navigateToFilmDetails(idFilm) {
+        this.props.navigation.navigate("FilmDetails", {idFilm: idFilm});
+    }
 
     displayFilmDetails() {
         const film = this.state.film;
@@ -137,6 +150,13 @@ class FilmDetails extends React.Component {
                         return company.name;
                     }).join(" / ")}
                     </Text>
+                    
+                    <FilmList 
+                        films={this.state.similarFilms}
+                        callbackNavigate={this.navigateToFilmDetails}
+                        page={0}
+                        totalPages={0}
+                    />
                 </ScrollView>
             );
         }
